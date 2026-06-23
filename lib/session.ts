@@ -2,7 +2,13 @@ import { SignJWT } from "jose/jwt/sign";
 import { jwtVerify } from "jose/jwt/verify";
 
 export const ADMIN_SESSION_COOKIE = "bimola_admin_session";
-export const ADMIN_SESSION_MAX_AGE = 60 * 60 * 8;
+export const ADMIN_SESSION_MAX_AGE = 60 * 60 * 24 * 7;
+export const ADMIN_SESSION_COOKIE_OPTIONS = {
+  httpOnly: true,
+  sameSite: "lax" as const,
+  secure: process.env.NODE_ENV === "production",
+  path: "/",
+};
 
 export type AdminSession = {
   adminId: string;

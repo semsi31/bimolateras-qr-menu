@@ -43,5 +43,12 @@ export async function loginAction(
   }
 
   await createAdminSession(admin);
+
+  console.log("[ADMIN_LOGIN_SUCCESS]", {
+    email: admin.email,
+    hasCookie: true,
+    nodeEnv: process.env.NODE_ENV,
+  });
+
   redirect(redirectTo);
 }

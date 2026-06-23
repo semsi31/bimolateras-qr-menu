@@ -101,9 +101,15 @@ function ProductForm({
   const [hasPreviewError, setHasPreviewError] = useState(false);
   const [isUploadPending, startUploadTransition] = useTransition();
   const imageUrlRef = useRef(imageUrl);
+  const initializedProductIdRef = useRef<string | undefined>(undefined);
   const previewUrl = localSelectedFilePreview || uploadedPreviewUrl || imageUrl;
 
   useEffect(() => {
+    if (initializedProductIdRef.current === product?.id) {
+      return;
+    }
+
+    initializedProductIdRef.current = product?.id;
     const nextImageUrl = product?.imageUrl ?? "";
 
     setImageUrl(nextImageUrl);
@@ -113,7 +119,7 @@ function ProductForm({
     setSelectedFileName("");
     setUploadMessage(null);
     setHasPreviewError(false);
-  }, [product?.id]);
+  }, [product?.id, product?.imageUrl]);
 
   useEffect(() => {
     imageUrlRef.current = imageUrl;

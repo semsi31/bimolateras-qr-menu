@@ -19,20 +19,34 @@ function isProtectedAdminPath(pathname: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const session = await verifySessionToken(token);
+  const hasSessionCookie = Boolean(token);
 
-  if (pathname === "/admin/login" && session) {
-    return NextResponse.redirect(new URL("/admin", request.url));
-  }
+  console.log("[ADMIN_MIDDLEWARE]", {
+    pathname,
+    hasSessionCookie,
+  });
 
-  if (pathname === "/admin/login") {
+  if (pathname.startsWith("/admin/login")) {
+    const session = await verifySessionToken(token);
+
+    if (session) {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+
     return NextResponse.next();
   }
 
-  if (isProtectedAdminPath(pathname) && !session) {
-    const loginUrl = new URL("/admin/login", request.url);
-    loginUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(loginUrl);
+  if (isProtectedAdminPath(pathname)) {
+    const session = await verifySessionToken(token);
+
+    if (!session) {
+      const loginUrl = new URL("/admin/login", request.url);
+      loginUrl.searchParams.set(
+        "next",
+        `${pathname}${request.nextUrl.search}`
+      );
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   return NextResponse.next();

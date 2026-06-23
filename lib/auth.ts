@@ -5,18 +5,12 @@ import bcrypt from "bcryptjs";
 import { getPrismaClient } from "@/lib/db";
 import {
   ADMIN_SESSION_COOKIE,
+  ADMIN_SESSION_COOKIE_OPTIONS,
   ADMIN_SESSION_MAX_AGE,
   createSessionToken,
   verifySessionToken,
   type AdminSession,
 } from "@/lib/session";
-
-const cookieOptions = {
-  httpOnly: true,
-  sameSite: "lax" as const,
-  secure: process.env.NODE_ENV === "production",
-  path: "/",
-};
 
 export async function authenticateAdmin(email: string, password: string) {
   const prisma = getPrismaClient();
@@ -53,7 +47,7 @@ export async function createAdminSession(session: AdminSession) {
   const cookieStore = await cookies();
 
   cookieStore.set(ADMIN_SESSION_COOKIE, token, {
-    ...cookieOptions,
+    ...ADMIN_SESSION_COOKIE_OPTIONS,
     maxAge: ADMIN_SESSION_MAX_AGE,
   });
 }
@@ -62,7 +56,7 @@ export async function clearAdminSession() {
   const cookieStore = await cookies();
 
   cookieStore.set(ADMIN_SESSION_COOKIE, "", {
-    ...cookieOptions,
+    ...ADMIN_SESSION_COOKIE_OPTIONS,
     maxAge: 0,
   });
 }
