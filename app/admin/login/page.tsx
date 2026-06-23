@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
+import { PublicLogoImage } from "@/components/public/PublicLogoImage";
 import { Button } from "@/components/ui/button";
 import { getCurrentAdminSession } from "@/lib/auth";
-import { LOGO_PATH, SITE } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
 import { createPageMetadata } from "@/lib/metadata";
+import { getPublicCafeSettings } from "@/lib/settings-data";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Admin Giriş",
@@ -31,6 +32,8 @@ export default async function AdminLoginPage({
   }
 
   const { next } = await searchParams;
+  const settings = await getPublicCafeSettings();
+  const cafeName = settings.cafeName ?? SITE.name;
 
   return (
     <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-bimola-dark px-5 py-10">
@@ -45,21 +48,20 @@ export default async function AdminLoginPage({
 
       <section className="relative w-full max-w-md rounded-[2rem] border border-bimola-cream/10 bg-bimola-cream/[0.06] p-6 shadow-card backdrop-blur sm:p-8">
         <div className="text-center">
-          <div className="relative mx-auto size-20 overflow-hidden rounded-3xl border border-bimola-gold/30 bg-bimola-card shadow-gold">
-            <Image
-              src={LOGO_PATH}
-              alt={`${SITE.name} logosu`}
-              fill
-              sizes="80px"
-              className="object-cover"
+          <div className="relative mx-auto size-20 overflow-hidden rounded-3xl border border-bimola-gold/30 bg-bimola-cream/5 shadow-gold">
+            <PublicLogoImage
+              src={settings.logoUrl}
+              updatedAt={settings.updatedAt}
+              alt={`${cafeName} logosu`}
               priority
+              sizes="80px"
             />
           </div>
           <h1 className="mt-5 font-heading text-3xl font-semibold text-bimola-cream">
             Admin Giriş
           </h1>
           <p className="mt-2 text-sm leading-6 text-bimola-cream/58">
-            {SITE.name} yönetim paneli için giriş ekranı.
+            {cafeName} yönetim paneli için giriş ekranı.
           </p>
         </div>
 

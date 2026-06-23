@@ -3,8 +3,7 @@
 import { motion } from "framer-motion";
 
 import { PublicLogoImage } from "@/components/public/PublicLogoImage";
-import { withImageVersion } from "@/lib/image-version";
-import { LOGO_PATH, SITE } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
 import type { CafeSettingsData } from "@/lib/settings-data";
 import { cn } from "@/lib/utils";
 
@@ -17,8 +16,6 @@ type HeroProps = {
 export function Hero({ className, showLocation = true, settings }: HeroProps) {
   const cafeName = settings?.cafeName ?? SITE.name;
   const locationText = settings?.locationText ?? SITE.location;
-  const logoUrl = settings?.logoUrl ?? LOGO_PATH;
-  const logoSrc = withImageVersion(logoUrl, settings?.updatedAt) ?? LOGO_PATH;
 
   return (
     <motion.header
@@ -31,10 +28,11 @@ export function Hero({ className, showLocation = true, settings }: HeroProps) {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-        className="relative mb-6 size-28 overflow-hidden rounded-full border-2 border-bimola-border bg-bimola-card shadow-card sm:size-32"
+        className="relative mb-6 size-28 overflow-hidden rounded-full border-2 border-bimola-border bg-transparent shadow-card sm:size-32"
       >
         <PublicLogoImage
-          src={logoSrc}
+          src={settings?.logoUrl}
+          updatedAt={settings?.updatedAt}
           alt={`${cafeName} logosu`}
           priority
           sizes="128px"

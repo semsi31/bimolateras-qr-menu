@@ -4,9 +4,11 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { LOGO_PATH } from "@/lib/constants";
+import { withImageVersion } from "@/lib/image-version";
 
 type PublicLogoImageProps = {
-  src: string;
+  src?: string | null;
+  updatedAt?: string | Date | null;
   alt: string;
   sizes: string;
   priority?: boolean;
@@ -14,17 +16,19 @@ type PublicLogoImageProps = {
 
 export function PublicLogoImage({
   src,
+  updatedAt,
   alt,
   sizes,
   priority = false,
 }: PublicLogoImageProps) {
-  const [imageSrc, setImageSrc] = useState(src);
+  const logoSrc = withImageVersion(src || LOGO_PATH, updatedAt) ?? LOGO_PATH;
+  const [imageSrc, setImageSrc] = useState(logoSrc);
   const [showPlaceholder, setShowPlaceholder] = useState(false);
 
   useEffect(() => {
-    setImageSrc(src);
+    setImageSrc(logoSrc);
     setShowPlaceholder(false);
-  }, [src]);
+  }, [logoSrc]);
 
   return (
     <>
@@ -37,7 +41,7 @@ export function PublicLogoImage({
           unoptimized
           priority={priority}
           sizes={sizes}
-          className="p-2 object-contain"
+          className="p-0.5 object-contain"
           onError={() => {
             if (imageSrc !== LOGO_PATH) {
               setImageSrc(LOGO_PATH);
@@ -50,7 +54,7 @@ export function PublicLogoImage({
       ) : (
         <div
           aria-hidden
-          className="flex size-full items-center justify-center bg-bimola-cream p-3"
+          className="flex size-full items-center justify-center p-3"
         >
           <span className="font-heading text-lg font-semibold leading-none text-bimola-coffee">
             B

@@ -15,8 +15,7 @@ import {
 import { logoutAction } from "@/app/admin/logout/actions";
 import { PublicLogoImage } from "@/components/public/PublicLogoImage";
 import { Button } from "@/components/ui/button";
-import { LOGO_PATH, SITE } from "@/lib/constants";
-import { withImageVersion } from "@/lib/image-version";
+import { SITE } from "@/lib/constants";
 import type { CafeSettingsData } from "@/lib/settings-data";
 import { cn } from "@/lib/utils";
 
@@ -35,16 +34,15 @@ const mobileLinks = [
 export function AdminTopbar({ settings }: AdminTopbarProps) {
   const pathname = usePathname();
   const cafeName = settings?.cafeName ?? SITE.shortName;
-  const logoUrl = settings?.logoUrl ?? LOGO_PATH;
-  const logoSrc = withImageVersion(logoUrl, settings?.updatedAt) ?? LOGO_PATH;
 
   return (
     <header className="sticky top-0 z-30 border-b border-bimola-cream/10 bg-bimola-dark/90 backdrop-blur-xl lg:hidden">
       <div className="flex items-center justify-between gap-3 px-4 py-3">
         <Link href="/admin" className="flex min-w-0 items-center gap-3">
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-xl border border-bimola-gold/30 bg-bimola-card shadow-gold">
+          <div className="relative size-10 shrink-0 overflow-hidden rounded-xl border border-bimola-gold/30 bg-bimola-cream/5 shadow-gold">
             <PublicLogoImage
-              src={logoSrc}
+              src={settings?.logoUrl}
+              updatedAt={settings?.updatedAt}
               alt={`${cafeName} logosu`}
               sizes="40px"
               priority

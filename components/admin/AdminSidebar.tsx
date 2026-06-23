@@ -15,8 +15,7 @@ import {
 import { logoutAction } from "@/app/admin/logout/actions";
 import { PublicLogoImage } from "@/components/public/PublicLogoImage";
 import { Button } from "@/components/ui/button";
-import { LOGO_PATH, SITE } from "@/lib/constants";
-import { withImageVersion } from "@/lib/image-version";
+import { SITE } from "@/lib/constants";
 import type { CafeSettingsData } from "@/lib/settings-data";
 import { cn } from "@/lib/utils";
 
@@ -36,15 +35,14 @@ export function AdminSidebar({ settings }: AdminSidebarProps) {
   const pathname = usePathname();
   const cafeName = settings?.cafeName ?? SITE.shortName;
   const locationText = settings?.locationText ?? SITE.location;
-  const logoUrl = settings?.logoUrl ?? LOGO_PATH;
-  const logoSrc = withImageVersion(logoUrl, settings?.updatedAt) ?? LOGO_PATH;
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-bimola-cream/10 bg-bimola-dark/90 p-5 shadow-card backdrop-blur-xl lg:flex lg:flex-col">
       <Link href="/admin" className="flex items-center gap-3">
-        <div className="relative size-12 overflow-hidden rounded-2xl border border-bimola-gold/30 bg-bimola-card shadow-gold">
+        <div className="relative size-12 overflow-hidden rounded-2xl border border-bimola-gold/30 bg-bimola-cream/5 shadow-gold">
           <PublicLogoImage
-            src={logoSrc}
+            src={settings?.logoUrl}
+            updatedAt={settings?.updatedAt}
             alt={`${cafeName} logosu`}
             sizes="48px"
             priority

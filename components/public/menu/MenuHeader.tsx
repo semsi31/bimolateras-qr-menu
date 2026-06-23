@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import { MapPin, Sparkles } from "lucide-react";
 
 import { PublicLogoImage } from "@/components/public/PublicLogoImage";
-import { withImageVersion } from "@/lib/image-version";
-import { LOGO_PATH, SITE } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
 import type { CafeSettingsData } from "@/lib/settings-data";
 
 type MenuHeaderProps = {
@@ -15,8 +14,6 @@ type MenuHeaderProps = {
 export function MenuHeader({ settings }: MenuHeaderProps) {
   const cafeName = settings?.cafeName ?? SITE.name;
   const locationText = settings?.locationText ?? SITE.location;
-  const logoUrl = settings?.logoUrl ?? LOGO_PATH;
-  const logoSrc = withImageVersion(logoUrl, settings?.updatedAt) ?? LOGO_PATH;
 
   return (
     <motion.header
@@ -39,10 +36,11 @@ export function MenuHeader({ settings }: MenuHeaderProps) {
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.12, ease: "easeOut" }}
-          className="relative size-16 shrink-0 overflow-hidden rounded-[1.15rem] border border-bimola-gold/30 bg-bimola-card shadow-gold min-[390px]:size-20 sm:size-24 sm:rounded-2xl"
+          className="relative size-16 shrink-0 overflow-hidden rounded-[1.15rem] border border-bimola-gold/30 bg-bimola-cream/5 shadow-gold min-[390px]:size-20 sm:size-24 sm:rounded-2xl"
         >
           <PublicLogoImage
-            src={logoSrc}
+            src={settings?.logoUrl}
+            updatedAt={settings?.updatedAt}
             alt={`${cafeName} logosu`}
             priority
             sizes="96px"

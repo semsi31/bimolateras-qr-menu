@@ -5,6 +5,7 @@ import {
   Coffee,
   FolderTree,
   Plus,
+  Settings,
   Sparkles,
   UtensilsCrossed,
 } from "lucide-react";
@@ -29,6 +30,33 @@ const formatPrice = (price: number) =>
     currency: "TRY",
     maximumFractionDigits: 0,
   }).format(price);
+
+const quickActions = [
+  {
+    href: "/admin/products",
+    label: "Yeni ürün ekle",
+    description: "Menüye yeni bir ürün kartı oluştur.",
+    icon: Plus,
+  },
+  {
+    href: "/admin/categories",
+    label: "Yeni kategori ekle",
+    description: "Menü bölümlerini düzenle ve sırala.",
+    icon: FolderTree,
+  },
+  {
+    href: "/menu",
+    label: "Menüyü görüntüle",
+    description: "Public QR menüyü müşteri gözüyle aç.",
+    icon: UtensilsCrossed,
+  },
+  {
+    href: "/admin/settings",
+    label: "Ayarlara git",
+    description: "Logo, iletişim ve işletme bilgilerini güncelle.",
+    icon: Settings,
+  },
+] as const;
 
 export default async function AdminPage() {
   const { stats, recentProducts, error } = await getAdminDashboardData();
@@ -141,15 +169,34 @@ export default async function AdminPage() {
 
         <section className="rounded-3xl border border-bimola-gold/20 bg-bimola-gold/10 p-5 shadow-gold">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-bimola-gold-light">
-            Aşama 6
+            Hızlı İşlemler
           </p>
           <h2 className="mt-2 font-heading text-2xl font-semibold text-bimola-cream">
-            Database bağlı yönetim paneli
+            Yönetim kısayolları
           </h2>
-          <p className="mt-3 text-sm leading-6 text-bimola-cream/65">
-            Ürün ve kategori CRUD işlemleri Prisma database üzerinde çalışır.
-            Upload entegrasyonu bir sonraki aşamaya bırakıldı.
+          <p className="mt-2 text-sm leading-6 text-bimola-cream/62">
+            En sık kullanılan admin adımlarına tek dokunuşla ulaşın.
           </p>
+
+          <div className="mt-5 grid gap-3">
+            {quickActions.map(({ href, label, description, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group flex items-center gap-3 rounded-2xl border border-bimola-cream/10 bg-bimola-dark/35 p-3 text-bimola-cream transition-colors hover:border-bimola-gold/35 hover:bg-bimola-dark/55"
+              >
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-bimola-gold/20 text-bimola-gold-light transition-colors group-hover:bg-bimola-gold group-hover:text-bimola-cream">
+                  <Icon className="size-4" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold">{label}</span>
+                  <span className="mt-0.5 block text-xs leading-5 text-bimola-cream/52">
+                    {description}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
         </section>
       </div>
     </AdminShell>
