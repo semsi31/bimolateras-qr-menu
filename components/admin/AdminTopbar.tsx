@@ -46,6 +46,7 @@ export function AdminTopbar({ settings }: AdminTopbarProps) {
               alt={`${cafeName} logosu`}
               sizes="40px"
               priority
+              variant="flush"
             />
           </div>
           <div className="min-w-0">

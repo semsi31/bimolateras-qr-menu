@@ -36,6 +36,7 @@ export function Hero({ className, showLocation = true, settings }: HeroProps) {
           alt={`${cafeName} logosu`}
           priority
           sizes="128px"
+          variant="compact"
         />
       </motion.div>
 

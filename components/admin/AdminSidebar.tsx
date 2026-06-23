@@ -46,6 +46,7 @@ export function AdminSidebar({ settings }: AdminSidebarProps) {
             alt={`${cafeName} logosu`}
             sizes="48px"
             priority
+            variant="flush"
           />
         </div>
         <div>

@@ -36,7 +36,7 @@ export function MenuHeader({ settings }: MenuHeaderProps) {
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.12, ease: "easeOut" }}
-          className="relative size-16 shrink-0 overflow-hidden rounded-[1.15rem] border border-bimola-gold/30 bg-bimola-cream/5 shadow-gold min-[390px]:size-20 sm:size-24 sm:rounded-2xl"
+          className="relative size-16 shrink-0 overflow-hidden rounded-[1.15rem] border border-bimola-gold/30 bg-bimola-dark/35 shadow-gold ring-1 ring-bimola-cream/10 min-[390px]:size-20 sm:size-24 sm:rounded-2xl"
         >
           <PublicLogoImage
             src={settings?.logoUrl}
@@ -44,6 +44,7 @@ export function MenuHeader({ settings }: MenuHeaderProps) {
             alt={`${cafeName} logosu`}
             priority
             sizes="96px"
+            variant="flush"
           />
         </motion.div>
 

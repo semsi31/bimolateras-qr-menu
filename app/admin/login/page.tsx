@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
 import { PublicLogoImage } from "@/components/public/PublicLogoImage";
-import { Button } from "@/components/ui/button";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { SITE } from "@/lib/constants";
 import { createPageMetadata } from "@/lib/metadata";
@@ -48,13 +46,14 @@ export default async function AdminLoginPage({
 
       <section className="relative w-full max-w-md rounded-[2rem] border border-bimola-cream/10 bg-bimola-cream/[0.06] p-6 shadow-card backdrop-blur sm:p-8">
         <div className="text-center">
-          <div className="relative mx-auto size-20 overflow-hidden rounded-3xl border border-bimola-gold/30 bg-bimola-cream/5 shadow-gold">
+          <div className="relative mx-auto size-24 overflow-hidden rounded-3xl border border-bimola-gold/30 bg-bimola-dark/25 shadow-gold ring-1 ring-bimola-cream/10">
             <PublicLogoImage
               src={settings.logoUrl}
               updatedAt={settings.updatedAt}
               alt={`${cafeName} logosu`}
               priority
-              sizes="80px"
+              sizes="96px"
+              variant="flush"
             />
           </div>
           <h1 className="mt-5 font-heading text-3xl font-semibold text-bimola-cream">
@@ -66,17 +65,6 @@ export default async function AdminLoginPage({
         </div>
 
         <AdminLoginForm nextPath={next} />
-
-        <div className="mt-5 rounded-2xl border border-bimola-gold/20 bg-bimola-gold/10 p-4 text-center">
-          <p className="text-xs leading-5 text-bimola-cream/62">
-            Bu giriş demo/development kullanımı içindir. Production ortamında
-            ADMIN_EMAIL, ADMIN_PASSWORD ve AUTH_SECRET değerlerini değiştirin.
-          </p>
-        </div>
-
-        <Button asChild variant="ghost" className="mt-4 w-full">
-          <Link href="/admin">Dashboard önizlemesine dön</Link>
-        </Button>
       </section>
     </main>
   );

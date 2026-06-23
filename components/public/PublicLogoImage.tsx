@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { LOGO_PATH } from "@/lib/constants";
 import { withImageVersion } from "@/lib/image-version";
+import { cn } from "@/lib/utils";
 
 type PublicLogoImageProps = {
   src?: string | null;
@@ -12,6 +13,7 @@ type PublicLogoImageProps = {
   alt: string;
   sizes: string;
   priority?: boolean;
+  variant?: "flush" | "compact";
 };
 
 export function PublicLogoImage({
@@ -20,6 +22,7 @@ export function PublicLogoImage({
   alt,
   sizes,
   priority = false,
+  variant = "compact",
 }: PublicLogoImageProps) {
   const logoSrc = withImageVersion(src || LOGO_PATH, updatedAt) ?? LOGO_PATH;
   const [imageSrc, setImageSrc] = useState(logoSrc);
@@ -41,7 +44,10 @@ export function PublicLogoImage({
           unoptimized
           priority={priority}
           sizes={sizes}
-          className="p-0.5 object-contain"
+          className={cn(
+            "object-contain",
+            variant === "flush" ? "p-0" : "p-0.5"
+          )}
           onError={() => {
             if (imageSrc !== LOGO_PATH) {
               setImageSrc(LOGO_PATH);
