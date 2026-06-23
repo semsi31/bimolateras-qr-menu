@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
-import { PublicLogoImage } from "@/components/public/PublicLogoImage";
+import { Button } from "@/components/ui/button";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { LOGO_PATH, SITE } from "@/lib/constants";
-import { withImageVersion } from "@/lib/image-version";
 import { createPageMetadata } from "@/lib/metadata";
-import { getPublicCafeSettings } from "@/lib/settings-data";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Admin Giriş",
@@ -31,9 +31,6 @@ export default async function AdminLoginPage({
   }
 
   const { next } = await searchParams;
-  const settings = await getPublicCafeSettings();
-  const logoSrc =
-    withImageVersion(settings.logoUrl, settings.updatedAt) ?? LOGO_PATH;
 
   return (
     <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-bimola-dark px-5 py-10">
@@ -49,10 +46,12 @@ export default async function AdminLoginPage({
       <section className="relative w-full max-w-md rounded-[2rem] border border-bimola-cream/10 bg-bimola-cream/[0.06] p-6 shadow-card backdrop-blur sm:p-8">
         <div className="text-center">
           <div className="relative mx-auto size-20 overflow-hidden rounded-3xl border border-bimola-gold/30 bg-bimola-card shadow-gold">
-            <PublicLogoImage
-              src={logoSrc}
-              alt={`${settings.cafeName} logosu`}
+            <Image
+              src={LOGO_PATH}
+              alt={`${SITE.name} logosu`}
+              fill
               sizes="80px"
+              className="object-cover"
               priority
             />
           </div>
@@ -60,11 +59,22 @@ export default async function AdminLoginPage({
             Admin Giriş
           </h1>
           <p className="mt-2 text-sm leading-6 text-bimola-cream/58">
-            {settings.cafeName || SITE.name} yönetim paneli
+            {SITE.name} yönetim paneli için giriş ekranı.
           </p>
         </div>
 
         <AdminLoginForm nextPath={next} />
+
+        <div className="mt-5 rounded-2xl border border-bimola-gold/20 bg-bimola-gold/10 p-4 text-center">
+          <p className="text-xs leading-5 text-bimola-cream/62">
+            Bu giriş demo/development kullanımı içindir. Production ortamında
+            ADMIN_EMAIL, ADMIN_PASSWORD ve AUTH_SECRET değerlerini değiştirin.
+          </p>
+        </div>
+
+        <Button asChild variant="ghost" className="mt-4 w-full">
+          <Link href="/admin">Dashboard önizlemesine dön</Link>
+        </Button>
       </section>
     </main>
   );

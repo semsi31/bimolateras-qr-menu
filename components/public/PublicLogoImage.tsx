@@ -37,7 +37,7 @@ export function PublicLogoImage({
           unoptimized
           priority={priority}
           sizes={sizes}
-          className="object-cover"
+          className="p-2 object-contain"
           onError={() => {
             if (imageSrc !== LOGO_PATH) {
               setImageSrc(LOGO_PATH);
@@ -50,7 +50,7 @@ export function PublicLogoImage({
       ) : (
         <div
           aria-hidden
-          className="flex size-full items-center justify-center bg-bimola-cream"
+          className="flex size-full items-center justify-center bg-bimola-cream p-3"
         >
           <span className="font-heading text-lg font-semibold leading-none text-bimola-coffee">
             B

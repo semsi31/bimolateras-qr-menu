@@ -13,11 +13,6 @@ const nextConfig: NextConfig = {
         hostname: "images.bimolateras.com",
         pathname: "/**",
       },
-      {
-        protocol: "https",
-        hostname: "*.r2.dev",
-        pathname: "/**",
-      },
     ],
   },
 };

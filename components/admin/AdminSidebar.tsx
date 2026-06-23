@@ -12,6 +12,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 
+import { logoutAction } from "@/app/admin/logout/actions";
 import { PublicLogoImage } from "@/components/public/PublicLogoImage";
 import { Button } from "@/components/ui/button";
 import { LOGO_PATH, SITE } from "@/lib/constants";
@@ -90,17 +91,19 @@ export function AdminSidebar({ settings }: AdminSidebarProps) {
             <p className="text-xs text-bimola-cream/55">{locationText}</p>
           </div>
         </div>
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className="mt-4 w-full justify-start text-bimola-cream/65 hover:bg-bimola-cream/10 hover:text-bimola-cream"
-        >
-          <Link href="/admin/logout">
-            <LogOut className="size-4" />
-            Çıkış Yap
-          </Link>
-        </Button>
+        <form action={logoutAction}>
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="mt-4 w-full justify-start text-bimola-cream/65 hover:bg-bimola-cream/10 hover:text-bimola-cream"
+          >
+            <button type="submit">
+              <LogOut className="size-4" />
+              Çıkış Yap
+            </button>
+          </Button>
+        </form>
       </div>
     </aside>
   );

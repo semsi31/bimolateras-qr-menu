@@ -9,13 +9,23 @@ export type LoginFormState = {
   error?: string;
 };
 
-function getSafeRedirectPath(value: FormDataEntryValue | null) {
+function getSafeAdminRedirectPath(value: FormDataEntryValue | null) {
+  const fallback = "/admin";
+
   if (typeof value !== "string") {
-    return "/admin";
+    return fallback;
   }
 
-  if (!value.startsWith("/admin") || value.startsWith("/admin/login")) {
-    return "/admin";
+  if (!value.startsWith("/admin")) {
+    return fallback;
+  }
+
+  if (value.startsWith("/admin/login")) {
+    return fallback;
+  }
+
+  if (value.startsWith("/admin/logout")) {
+    return fallback;
   }
 
   return value;
@@ -27,7 +37,7 @@ export async function loginAction(
 ): Promise<LoginFormState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const redirectTo = getSafeRedirectPath(formData.get("next"));
+  const redirectTo = getSafeAdminRedirectPath(formData.get("next"));
 
   if (!email || !password) {
     return {

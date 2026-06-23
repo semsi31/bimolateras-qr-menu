@@ -12,6 +12,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 
+import { logoutAction } from "@/app/admin/logout/actions";
 import { PublicLogoImage } from "@/components/public/PublicLogoImage";
 import { Button } from "@/components/ui/button";
 import { LOGO_PATH, SITE } from "@/lib/constants";
@@ -91,13 +92,15 @@ export function AdminTopbar({ settings }: AdminTopbarProps) {
             </Link>
           );
         })}
-        <Link
-          href="/admin/logout"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-bimola-cream/10 bg-bimola-cream/5 px-3 py-2 text-xs font-semibold text-bimola-cream/70"
-        >
-          <LogOut className="size-3.5" />
-          Çıkış
-        </Link>
+        <form action={logoutAction}>
+          <button
+            type="submit"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-bimola-cream/10 bg-bimola-cream/5 px-3 py-2 text-xs font-semibold text-bimola-cream/70"
+          >
+            <LogOut className="size-3.5" />
+            Çıkış
+          </button>
+        </form>
       </nav>
     </header>
   );
