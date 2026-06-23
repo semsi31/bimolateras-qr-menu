@@ -16,8 +16,28 @@ export type AdminSession = {
   name?: string | null;
 };
 
+export type SessionVerifyReason =
+  | "missing-cookie"
+  | "missing-secret"
+  | "invalid-token"
+  | "expired-token"
+  | "verify-exception"
+  | "ok";
+
+export type SessionVerifyResult =
+  | {
+      valid: true;
+      reason: "ok";
+      session: AdminSession;
+    }
+  | {
+      valid: false;
+      reason: Exclude<SessionVerifyReason, "ok">;
+    };
+
 const issuer = "bimola-teras-admin";
 const audience = "bimola-teras-dashboard";
+const developmentSecret = "development-only-bimola-auth-secret";
 
 function getSecretValue() {
   const secret = process.env.AUTH_SECRET;
@@ -26,7 +46,7 @@ function getSecretValue() {
     throw new Error("AUTH_SECRET is required in production.");
   }
 
-  return secret ?? "development-only-bimola-auth-secret";
+  return secret ?? developmentSecret;
 }
 
 function getEncodedSecret() {
@@ -48,26 +68,52 @@ export async function createSessionToken(session: AdminSession) {
 }
 
 export async function verifySessionToken(token?: string | null) {
+  const result = await verifySessionTokenWithReason(token);
+
+  return result.valid ? result.session : null;
+}
+
+export async function verifySessionTokenWithReason(
+  token?: string | null
+): Promise<SessionVerifyResult> {
   if (!token) {
-    return null;
+    return { valid: false, reason: "missing-cookie" };
+  }
+
+  const secret = process.env.AUTH_SECRET;
+
+  if (!secret && process.env.NODE_ENV === "production") {
+    return { valid: false, reason: "missing-secret" };
   }
 
   try {
-    const { payload } = await jwtVerify(token, getEncodedSecret(), {
+    const encodedSecret = new TextEncoder().encode(secret ?? developmentSecret);
+    const { payload } = await jwtVerify(token, encodedSecret, {
       issuer,
       audience,
     });
 
     if (!payload.sub || typeof payload.email !== "string") {
-      return null;
+      return { valid: false, reason: "invalid-token" };
     }
 
     return {
-      adminId: payload.sub,
-      email: payload.email,
-      name: typeof payload.name === "string" ? payload.name : null,
-    } satisfies AdminSession;
-  } catch {
-    return null;
+      valid: true,
+      reason: "ok",
+      session: {
+        adminId: payload.sub,
+        email: payload.email,
+        name: typeof payload.name === "string" ? payload.name : null,
+      },
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      return {
+        valid: false,
+        reason: error.name === "JWTExpired" ? "expired-token" : "invalid-token",
+      };
+    }
+
+    return { valid: false, reason: "verify-exception" };
   }
 }

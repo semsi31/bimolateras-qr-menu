@@ -1,6 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { ADMIN_SESSION_COOKIE, verifySessionToken } from "@/lib/session";
+import {
+  ADMIN_SESSION_COOKIE,
+  verifySessionTokenWithReason,
+} from "@/lib/session";
 
 const protectedAdminPaths = [
   "/admin",
@@ -19,17 +22,22 @@ function isProtectedAdminPath(pathname: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const hasSessionCookie = Boolean(token);
-
-  console.log("[ADMIN_MIDDLEWARE]", {
-    pathname,
-    hasSessionCookie,
-  });
+  const hasAuthSecret = Boolean(process.env.AUTH_SECRET);
 
   if (pathname.startsWith("/admin/login")) {
-    const session = await verifySessionToken(token);
+    const verify = await verifySessionTokenWithReason(token);
 
-    if (session) {
+    console.log("[ADMIN_MIDDLEWARE]", {
+      pathname,
+      hasCookie: Boolean(token),
+      cookieName: ADMIN_SESSION_COOKIE,
+      hasAuthSecret,
+      authSecretLength: process.env.AUTH_SECRET?.length ?? 0,
+      verifyResult: verify.valid,
+      verifyErrorReason: verify.reason,
+    });
+
+    if (verify.valid) {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
 
@@ -37,9 +45,19 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isProtectedAdminPath(pathname)) {
-    const session = await verifySessionToken(token);
+    const verify = await verifySessionTokenWithReason(token);
 
-    if (!session) {
+    console.log("[ADMIN_MIDDLEWARE]", {
+      pathname,
+      hasCookie: Boolean(token),
+      cookieName: ADMIN_SESSION_COOKIE,
+      hasAuthSecret,
+      authSecretLength: process.env.AUTH_SECRET?.length ?? 0,
+      verifyResult: verify.valid,
+      verifyErrorReason: verify.reason,
+    });
+
+    if (!verify.valid) {
       const loginUrl = new URL("/admin/login", request.url);
       loginUrl.searchParams.set(
         "next",
