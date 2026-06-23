@@ -1,9 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import {
-  ADMIN_SESSION_COOKIE,
-  verifySessionTokenWithReason,
-} from "@/lib/session";
+import { ADMIN_SESSION_COOKIE } from "@/lib/session";
 
 const protectedAdminPaths = [
   "/admin",
@@ -21,43 +18,28 @@ function isProtectedAdminPath(pathname: string) {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const hasAuthSecret = Boolean(process.env.AUTH_SECRET);
+  const sessionCookie = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
 
   if (pathname.startsWith("/admin/login")) {
-    const verify = await verifySessionTokenWithReason(token);
-
     console.log("[ADMIN_MIDDLEWARE]", {
       pathname,
-      hasCookie: Boolean(token),
+      hasCookie: Boolean(sessionCookie),
       cookieName: ADMIN_SESSION_COOKIE,
-      hasAuthSecret,
-      authSecretLength: process.env.AUTH_SECRET?.length ?? 0,
-      verifyResult: verify.valid,
-      verifyErrorReason: verify.reason,
+      mode: "login-page",
     });
-
-    if (verify.valid) {
-      return NextResponse.redirect(new URL("/admin", request.url));
-    }
 
     return NextResponse.next();
   }
 
   if (isProtectedAdminPath(pathname)) {
-    const verify = await verifySessionTokenWithReason(token);
-
     console.log("[ADMIN_MIDDLEWARE]", {
       pathname,
-      hasCookie: Boolean(token),
+      hasCookie: Boolean(sessionCookie),
       cookieName: ADMIN_SESSION_COOKIE,
-      hasAuthSecret,
-      authSecretLength: process.env.AUTH_SECRET?.length ?? 0,
-      verifyResult: verify.valid,
-      verifyErrorReason: verify.reason,
+      mode: "cookie-presence",
     });
 
-    if (!verify.valid) {
+    if (!sessionCookie) {
       const loginUrl = new URL("/admin/login", request.url);
       loginUrl.searchParams.set(
         "next",

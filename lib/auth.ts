@@ -46,8 +46,14 @@ export async function createAdminSession(session: AdminSession) {
   const token = await createSessionToken(session);
   const cookieStore = await cookies();
 
-  cookieStore.set(ADMIN_SESSION_COOKIE, token, {
-    ...ADMIN_SESSION_COOKIE_OPTIONS,
+  cookieStore.set(ADMIN_SESSION_COOKIE, token, ADMIN_SESSION_COOKIE_OPTIONS);
+
+  console.log("[ADMIN_LOGIN_COOKIE_SET]", {
+    cookieName: ADMIN_SESSION_COOKIE,
+    nodeEnv: process.env.NODE_ENV,
+    secure: ADMIN_SESSION_COOKIE_OPTIONS.secure,
+    sameSite: ADMIN_SESSION_COOKIE_OPTIONS.sameSite,
+    path: ADMIN_SESSION_COOKIE_OPTIONS.path,
     maxAge: ADMIN_SESSION_MAX_AGE,
   });
 }
@@ -70,6 +76,10 @@ export async function getCurrentAdminSession() {
 
 export async function requireAdminSession() {
   const session = await getCurrentAdminSession();
+
+  console.log("[ADMIN_SERVER_SESSION_CHECK]", {
+    hasSession: Boolean(session),
+  });
 
   if (!session) {
     redirect("/admin/login");

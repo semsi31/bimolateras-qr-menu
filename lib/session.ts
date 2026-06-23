@@ -8,6 +8,7 @@ export const ADMIN_SESSION_COOKIE_OPTIONS = {
   sameSite: "lax" as const,
   secure: process.env.NODE_ENV === "production",
   path: "/",
+  maxAge: ADMIN_SESSION_MAX_AGE,
 };
 
 export type AdminSession = {
