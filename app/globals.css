@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── Bİ'MOLA TERAS CAFE Design Tokens ─── */
+:root {
+  /* Brand palette */
+  --bimola-cream: #f6efe7;
+  --bimola-cream-dark: #ede4d8;
+  --bimola-coffee: #2b1a0f;
+  --bimola-coffee-muted: #6f5a48;
+  --bimola-gold: #b8864b;
+  --bimola-gold-light: #d4a574;
+  --bimola-dark: #1e140d;
+  --bimola-card: #fff9f2;
+  --bimola-border: #e7d7c6;
+  --bimola-success: #5a7c55;
+
+  /* shadcn/ui semantic tokens (cream/coffee theme) */
+  --background: var(--bimola-cream);
+  --foreground: var(--bimola-coffee);
+  --card: var(--bimola-card);
+  --card-foreground: var(--bimola-coffee);
+  --popover: var(--bimola-card);
+  --popover-foreground: var(--bimola-coffee);
+  --primary: var(--bimola-gold);
+  --primary-foreground: #fff9f2;
+  --secondary: var(--bimola-cream-dark);
+  --secondary-foreground: var(--bimola-coffee);
+  --muted: var(--bimola-cream-dark);
+  --muted-foreground: var(--bimola-coffee-muted);
+  --accent: var(--bimola-gold-light);
+  --accent-foreground: var(--bimola-coffee);
+  --destructive: #c45c4a;
+  --destructive-foreground: #fff9f2;
+  --border: var(--bimola-border);
+  --input: var(--bimola-border);
+  --ring: var(--bimola-gold);
+  --radius: 0.75rem;
+
+  /* Typography */
+  --font-heading: var(--font-playfair), "Georgia", serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+
+  /* Shadows */
+  --shadow-soft: 0 4px 24px -4px rgb(43 26 15 / 0.08);
+  --shadow-card: 0 8px 32px -8px rgb(43 26 15 / 0.12);
+  --shadow-gold: 0 4px 20px -4px rgb(184 134 75 / 0.35);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand color utilities */
+  --color-bimola-cream: var(--bimola-cream);
+  --color-bimola-cream-dark: var(--bimola-cream-dark);
+  --color-bimola-coffee: var(--bimola-coffee);
+  --color-bimola-coffee-muted: var(--bimola-coffee-muted);
+  --color-bimola-gold: var(--bimola-gold);
+  --color-bimola-gold-light: var(--bimola-gold-light);
+  --color-bimola-dark: var(--bimola-dark);
+  --color-bimola-card: var(--bimola-card);
+  --color-bimola-border: var(--bimola-border);
+  --color-bimola-success: var(--bimola-success);
+
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-card: var(--shadow-card);
+  --shadow-gold: var(--shadow-gold);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading text-bimola-coffee;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
