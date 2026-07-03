@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 import type { MenuCategory } from "@/lib/mock-menu";
@@ -16,6 +17,26 @@ export function CategoryTabs({
   activeCategoryId,
   onCategoryClick,
 }: CategoryTabsProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef(new Map<string, HTMLButtonElement>());
+
+  useEffect(() => {
+    const activeTab = tabRefs.current.get(activeCategoryId);
+    const container = scrollContainerRef.current;
+
+    if (!activeTab || !container) {
+      return;
+    }
+
+    const targetScrollLeft =
+      activeTab.offsetLeft - container.clientWidth / 2 + activeTab.offsetWidth / 2;
+
+    container.scrollTo({
+      left: Math.max(0, targetScrollLeft),
+      behavior: "smooth",
+    });
+  }, [activeCategoryId]);
+
   return (
     <motion.nav
       initial={{ opacity: 0, y: -8 }}
@@ -27,13 +48,23 @@ export function CategoryTabs({
       <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-bimola-cream via-bimola-cream/90 to-transparent sm:rounded-l-2xl" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-bimola-cream via-bimola-cream/90 to-transparent sm:rounded-r-2xl" />
 
-      <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-1">
+      <div
+        ref={scrollContainerRef}
+        className="no-scrollbar flex gap-1.5 overflow-x-auto px-1"
+      >
         {categories.map((category) => {
           const isActive = activeCategoryId === category.id;
 
           return (
             <button
               key={category.id}
+              ref={(element) => {
+                if (element) {
+                  tabRefs.current.set(category.id, element);
+                } else {
+                  tabRefs.current.delete(category.id);
+                }
+              }}
               type="button"
               onClick={() => onCategoryClick(category.id)}
               className={cn(

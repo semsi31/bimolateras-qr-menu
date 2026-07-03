@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
 import { CategoryTabs } from "@/components/public/menu/CategoryTabs";
@@ -16,6 +16,9 @@ type MenuExperienceProps = {
   products: MenuProduct[];
   settings?: CafeSettingsData;
 };
+
+/** Sticky category bar altında hangi bölümün "aktif" sayılacağı */
+const SCROLL_SPY_OFFSET = 88;
 
 export function MenuExperience({
   categories,
@@ -56,30 +59,47 @@ export function MenuExperience({
     setActiveCategoryId(sortedCategories[0]?.id ?? "");
   }, [sortedCategories]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  const updateActiveCategoryFromScroll = useCallback(() => {
+    if (sortedCategories.length === 0) {
+      return;
+    }
 
-        if (visibleEntry?.target.id) {
-          setActiveCategoryId(visibleEntry.target.id);
-        }
-      },
-      {
-        rootMargin: "-30% 0px -55% 0px",
-        threshold: [0.15, 0.4, 0.7],
-      }
-    );
+    let currentId = sortedCategories[0].id;
 
-    sortedCategories.forEach((category) => {
+    for (const category of sortedCategories) {
       const section = document.getElementById(category.id);
-      if (section) observer.observe(section);
-    });
+      if (!section) {
+        continue;
+      }
 
-    return () => observer.disconnect();
+      if (section.getBoundingClientRect().top <= SCROLL_SPY_OFFSET) {
+        currentId = category.id;
+      }
+    }
+
+    setActiveCategoryId((previousId) =>
+      previousId === currentId ? previousId : currentId
+    );
   }, [sortedCategories]);
+
+  useEffect(() => {
+    let frameId = 0;
+
+    const handleScroll = () => {
+      cancelAnimationFrame(frameId);
+      frameId = requestAnimationFrame(updateActiveCategoryFromScroll);
+    };
+
+    updateActiveCategoryFromScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [updateActiveCategoryFromScroll]);
 
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategoryId(categoryId);
