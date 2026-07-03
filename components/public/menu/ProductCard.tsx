@@ -38,7 +38,7 @@ export function ProductCard({ product }: ProductCardProps) {
       whileTap={product.isAvailable ? { scale: 0.985 } : undefined}
       transition={{ duration: 0.35, ease: "easeOut" }}
       className={cn(
-        "group overflow-hidden rounded-2xl border border-bimola-border bg-bimola-card shadow-soft transition-shadow duration-300 sm:rounded-[1.35rem]",
+        "group flex h-full flex-col overflow-hidden rounded-2xl border border-bimola-border bg-bimola-card shadow-soft transition-shadow duration-300 sm:rounded-[1.35rem]",
         product.isAvailable ? "hover:shadow-card" : "opacity-70 grayscale-[0.25]"
       )}
     >
@@ -86,18 +86,18 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-      <div className="p-2.5 sm:p-3">
-        <div>
-          <h3 className="line-clamp-1 font-heading text-base font-semibold leading-tight text-bimola-coffee sm:text-lg">
-            {product.name}
-          </h3>
+      <div className="flex flex-1 flex-col p-2.5 sm:p-3">
+        <h3 className="break-words font-heading text-base font-semibold leading-snug text-bimola-coffee sm:line-clamp-1 sm:text-lg">
+          {product.name}
+        </h3>
+        <p className="mt-1 min-h-[2.5rem] flex-1 break-words text-xs leading-5 text-bimola-coffee-muted sm:line-clamp-2 sm:text-sm">
+          {product.description || "\u00A0"}
+        </p>
+        <div className="mt-auto pt-2">
+          <span className="inline-flex items-center rounded-lg bg-bimola-coffee px-2.5 py-1 text-xs font-semibold tabular-nums tracking-wide text-bimola-cream sm:px-3 sm:text-sm">
+            {formatPrice(product.price)}
+          </span>
         </div>
-        <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-xs leading-5 text-bimola-coffee-muted sm:text-sm">
-          {product.description}
-        </p>
-        <p className="mt-2 inline-flex rounded-full bg-bimola-cream-dark px-2.5 py-1 text-sm font-bold leading-none text-bimola-coffee sm:text-base">
-          {formatPrice(product.price)}
-        </p>
       </div>
     </motion.article>
   );
